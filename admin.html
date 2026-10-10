@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price and box editor</title>
+<style>
+:root{--bg:#0d0720;--panel:#1a0d3d;--line:rgba(255,236,200,.14);--gold:#ffb21e;--cream:#fbf1dc;--muted:#bfb0da;--red:#ff6b6b;--green:#19c3a6}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 system-ui,'Segoe UI',sans-serif;background:var(--bg);color:var(--cream)}
+header{position:sticky;top:0;z-index:5;background:#120a2b;border-bottom:1px solid var(--line);padding:.9rem 1.2rem}
+h1{margin:0 0 .2rem;font-size:1.3rem}
+.sub{color:var(--muted);font-size:.9rem;margin-bottom:.7rem}
+.bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+input,select,button{font:inherit;color:inherit;background:#0d0720;border:1px solid var(--line);border-radius:8px;padding:.4rem .6rem}
+button{cursor:pointer;background:#2a1760}
+button:hover{border-color:var(--gold)}
+button.main{background:linear-gradient(120deg,#ffb21e,#ff7a1a);color:#2a1000;font-weight:700;border:0}
+.grp{display:flex;gap:.4rem;align-items:center;padding:.3rem .6rem;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:.88rem}
+.grp input{width:70px}
+.wrap{padding:0 1.2rem 4rem;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1180px;margin-top:.8rem}
+th{position:sticky;top:112px;background:#120a2b;text-align:left;font-size:.78rem;color:var(--muted);padding:.5rem .4rem;border-bottom:1px solid var(--line);z-index:3}
+td{padding:.3rem .3rem;border-bottom:1px solid rgba(255,236,200,.07);vertical-align:middle}
+tr.changed td{background:rgba(255,178,30,.09)}
+td input[type=text],td input[type=number],td select{width:100%;padding:.3rem .4rem;font-size:.9rem}
+td input.num{width:78px}
+td img{width:42px;height:42px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+.id{color:var(--muted);font-size:.8rem;text-align:center}
+.disc{font-size:.85rem;white-space:nowrap}.bad{color:var(--red);font-weight:700}.ok{color:var(--green)}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;margin:1rem 0 0;color:#eadcc0;font-size:.9rem}
+.err{margin:1rem 0;padding:1rem;border:1px solid var(--red);border-radius:12px;color:var(--red)}
+</style></head>
+<body>
+<header>
+  <h1>Price and box editor</h1>
+  <div class="sub">Type your prices and box quantities, then click <b>Download products.js</b> and replace that file in your project. Keep this page on your computer, you do not need to upload it.</div>
+  <div class="bar">
+    <input id="q" placeholder="Search name, brand or id" style="min-width:210px">
+    <select id="fc"><option value="">All categories</option></select>
+    <select id="fb"><option value="">All brands</option></select>
+    <label class="grp"><input type="checkbox" id="onlyCh"> changed only</label>
+    <span class="grp">Shown rows: price = <input id="pctMrp" type="number" value="50" min="1" max="100">% of MRP <button id="bMrp">Apply</button></span>
+    <span class="grp">Shown rows: multiply price by <input id="pctMul" type="number" value="100" min="1">% <button id="bMul">Apply</button></span>
+    <button id="bAdd">Add product</button>
+    <button id="bDl" class="main">Download products.js</button>
+    <span id="cnt" class="sub" style="margin:0"></span>
+  </div>
+</header>
+<div class="wrap">
+  <div id="msg"></div>
+  <table id="tb"><thead><tr>
+    <th></th><th>ID</th><th>Name</th><th>Category</th><th>Brand</th><th title="Pieces inside one box. Optional.">Pcs per box</th><th title="Other pack text, like 30 shots. Optional.">Pack text</th>
+    <th>Price Rs</th><th>MRP Rs</th><th>Off</th><th>Featured</th><th>Hide</th><th title="Free delivery when the cart has only such items">Free delivery</th><th>Image file</th>
+  </tr></thead><tbody></tbody></table>
+  <div class="note">Prices are in whole rupees. <b>Pcs per box</b> is optional: if you fill it, the shop shows "10 pcs per box" and the price per piece. <b>Hide</b> removes a product from the shop without deleting it. Changed rows are highlighted. Nothing is saved until you download products.js and put it in your project.</div>
+</div>
+<script src="products.js"></script>
+<script>
+const CATS=[['sparklers','Sparklers'],['flowerpots','Flower pots'],['chakras','Ground chakras'],['rockets','Rockets'],['skyshots','Sky shots'],['sound','Sound crackers'],['garlands','Garlands'],['fancy','Fancy and novelty'],['gifts','Gift boxes']];
+const src=window.PRODUCTS_DATA;
+const $=s=>document.querySelector(s);
+if(!src||!src.length){$('#msg').innerHTML='<div class="err">products.js was not found. Keep admin.html in the same folder as products.js.</div>';throw new Error('no data')}
+const data=src.map(p=>({...p})), orig=Object.fromEntries(src.map(p=>[p.id,JSON.stringify(clean(p))]));
+function clean(p){const o={id:p.id,name:p.name,cat:p.cat,brand:p.brand||'Other'};if(+p.perBox>0)o.perBox=+p.perBox;if(p.pack)o.pack=p.pack;
+  o.price=Math.round(+p.price)||0;o.mrp=Math.round(+p.mrp)||0;o.feat=p.feat?1:0;if(p.hide)o.hide=1;if(p.free)o.free=1;if(p.img)o.img=p.img;if(p.imgs&&p.imgs.length>1)o.imgs=p.imgs;o.desc=p.desc||'';return o}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('#fc').innerHTML+=CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join('');
+const brands=[...new Set(data.map(p=>p.brand||'Other'))].sort();
+$('#fb').innerHTML+=brands.map(b=>`<option>${esc(b)}</option>`).join('');
+function rowHtml(p,i){return `<tr data-i="${i}"><td>${p.img?`<img src="${esc(p.img)}" alt="">`:''}</td><td class="id">${p.id}</td>
+<td><input type="text" data-f="name" value="${esc(p.name)}"></td>
+<td><select data-f="cat">${CATS.map(c=>`<option value="${c[0]}" ${p.cat===c[0]?'selected':''}>${c[1]}</option>`).join('')}</select></td>
+<td><input type="text" data-f="brand" list="bl" value="${esc(p.brand)}" style="width:100px"></td>
+<td><input type="number" class="num" data-f="perBox" min="0" step="1" value="${p.perBox||''}" placeholder="optional"></td>
+<td><input type="text" data-f="pack" value="${esc(p.pack||'')}" placeholder="optional" style="width:110px"></td>
+<td><input type="number" class="num" data-f="price" min="1" step="1" value="${p.price}"></td>
+<td><input type="number" class="num" data-f="mrp" min="1" step="1" value="${p.mrp}"></td>
+<td class="disc"></td>
+<td><input type="checkbox" data-f="feat" ${p.feat?'checked':''}></td><td><input type="checkbox" data-f="hide" ${p.hide?'checked':''}></td><td><input type="checkbox" data-f="free" ${p.free?'checked':''}></td>
+<td><input type="text" data-f="img" value="${esc(p.img||'')}" style="width:220px"></td></tr>`}
+function build(){$('#tb tbody').innerHTML=data.map(rowHtml).join('')+'<datalist id="bl">'+brands.map(b=>`<option value="${esc(b)}">`).join('')+'</datalist>';data.forEach((_,i)=>refresh(i));filter()}
+function refresh(i){const p=data[i],tr=$(`#tb tbody tr[data-i="${i}"]`);if(!tr)return;
+  const off=p.mrp>0?Math.round((1-p.price/p.mrp)*100):0, d=tr.querySelector('.disc');
+  d.innerHTML=p.mrp<p.price?'<span class="bad">MRP below price</span>':`<span class="${off>0?'ok':''}">${off}%</span>`;
+  tr.classList.toggle('changed',orig[p.id]!==JSON.stringify(clean(p)));updCount()}
+function updCount(){const n=data.filter(p=>orig[p.id]!==JSON.stringify(clean(p))).length;$('#cnt').textContent=`${data.length} products, ${n} changed`}
+function filter(){const q=$('#q').value.trim().toLowerCase(),c=$('#fc').value,b=$('#fb').value,ch=$('#onlyCh').checked;
+  data.forEach((p,i)=>{const tr=$(`#tb tbody tr[data-i="${i}"]`);if(!tr)return;
+    const ok=(!q||(p.name+' '+p.brand+' '+p.id).toLowerCase().includes(q))&&(!c||p.cat===c)&&(!b||(p.brand||'Other')===b)&&(!ch||orig[p.id]!==JSON.stringify(clean(p)));tr.style.display=ok?'':'none'})}
+const shown=()=>data.map((p,i)=>[p,i]).filter(([,i])=>$(`#tb tbody tr[data-i="${i}"]`).style.display!=='none');
+$('#tb').addEventListener('input',e=>{const t=e.target,tr=t.closest('tr'),f=t.dataset.f;if(!tr||!f)return;const i=+tr.dataset.i,p=data[i];
+  if(t.type==='checkbox')p[f]=t.checked?1:0;else if(t.type==='number')p[f]=t.value===''?'':Math.round(+t.value);else p[f]=t.value;refresh(i)});
+['#q','#fc','#fb','#onlyCh'].forEach(s=>$(s).addEventListener('input',filter));
+function setNum(i,f,v){data[i][f]=v;const el=$(`#tb tbody tr[data-i="${i}"] [data-f="${f}"]`);if(el)el.value=v;refresh(i)}
+$('#bMrp').onclick=()=>{const k=+$('#pctMrp').value;if(!(k>0))return;shown().forEach(([p,i])=>setNum(i,'price',Math.max(1,Math.round(p.mrp*k/100))))};
+$('#bMul').onclick=()=>{const k=+$('#pctMul').value;if(!(k>0))return;shown().forEach(([p,i])=>{setNum(i,'price',Math.max(1,Math.round(p.price*k/100)));if(p.mrp<data[i].price)setNum(i,'mrp',data[i].price)})};
+$('#bAdd').onclick=()=>{const id=Math.max(...data.map(p=>+p.id))+1;data.push({id,name:'New product',cat:'fancy',brand:'Other',price:10,mrp:20,feat:0,desc:''});orig[id]='';build();$('#q').value='';filter();window.scrollTo(0,document.body.scrollHeight)};
+$('#bDl').onclick=()=>{
+  const bad=data.filter(p=>!(+p.price>0)||+p.mrp<+p.price||!String(p.name).trim());
+  if(bad.length&&!confirm(`${bad.length} product(s) have a missing price, a name, or an MRP below the price (first: id ${bad[0].id}). Download anyway?`))return;
+  const js='/* Product list. Edit prices with admin.html, then replace this file in your project and redeploy. */\n(function(r){if(typeof module!=="undefined"&&module.exports)module.exports=r;else window.PRODUCTS_DATA=r;})([\n'+data.map(p=>' '+JSON.stringify(clean(p))).join(',\n')+'\n]);\n';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([js],{type:'text/javascript'}));a.download='products.js';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+window.addEventListener('beforeunload',e=>{if(data.some(p=>orig[p.id]!==JSON.stringify(clean(p)))){e.preventDefault();e.returnValue=''}});
+build();
+</script></body></html>
