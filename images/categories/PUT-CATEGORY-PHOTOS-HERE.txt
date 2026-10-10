@@ -1,0 +1,4 @@
+Put your category photos here, named after the category id (jpg, jpeg, png or webp):
+sparklers.jpg  flowerpots.jpg  chakras.jpg  rockets.jpg  skyshots.jpg  sound.jpg  garlands.jpg  fancy.jpg  gifts.jpg
+Use wide photos (about 800 x 600). Anything missing falls back to a product photo.
+Optional home page banner: images/hero.jpg  (wide, about 1600 x 700, darker photos work best)
