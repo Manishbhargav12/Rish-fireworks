@@ -368,8 +368,8 @@ const CONFIG = {
   diwaliDate: '2026-11-08T18:00:00+05:30',   // countdown target
   freeShipAbove: 999, shipping: 60,
   /* ---- Cashfree ---- */
-  demoMode: true,            // true = fake payment so you can preview. Set false when /api is deployed
-  cashfreeMode: 'sandbox',   // 'sandbox' or 'production'
+  demoMode: false,            // true = fake payment so you can preview. Set false when /api is deployed
+  cashfreeMode: 'production',   // 'sandbox' or 'production'
   apiBase: ''                // '' = same domain (Vercel). Otherwise e.g. 'https://your-api.example.com'
 };
 const COUPONS = { DIWALI10: 10 };   // code -> % off (keep same in api/create-order.js)
