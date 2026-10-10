@@ -1,14 +1,15 @@
 // Vercel serverless function: creates a Cashfree order.
 // Env vars (Vercel > Project > Settings > Environment Variables):
 //   CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_ENV ("sandbox" or "production"), SITE_URL (optional)
-const PRICES = require('./_prices.json');
+const DATA = require('./_prices.json');
+const PRICES = DATA.prices, FREE = new Set((DATA.freeShip || []).map(String));
 const COUPONS = { DIWALI10: 10 };      // keep same as index.html
 const FREE_SHIP_ABOVE = 999, SHIPPING = 60;
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
-    const { items = [], customer = {}, coupon = '', pickup = false } = req.body || {};
+    const { items = [], customer = {}, coupon = '', pickup = false, expected } = req.body || {};
     if (!Array.isArray(items) || !items.length) return res.status(400).json({ error: 'Cart is empty' });
     if (!/^[6-9]\d{9}$/.test(customer.phone || '')) return res.status(400).json({ error: 'Invalid phone number' });
     if (!/^\S+@\S+\.\S+$/.test(customer.email || '')) return res.status(400).json({ error: 'Invalid email' });
@@ -23,8 +24,15 @@ module.exports = async (req, res) => {
     }
     const pct = COUPONS[String(coupon).toUpperCase()] || 0;
     const after = sub - Math.round(sub * pct / 100);
-    const ship = (pickup || after >= FREE_SHIP_ABOVE) ? 0 : SHIPPING;
+    const allFree = items.every(it => FREE.has(String(it.id)));
+    const ship = (pickup || allFree || after >= FREE_SHIP_ABOVE) ? 0 : SHIPPING;
     const amount = after + ship;
+
+    // Safety check: the total the customer saw on the website must equal the total calculated here.
+    // If not, the server files (api/_prices.json) are out of date, so stop instead of charging the wrong amount.
+    if (expected !== undefined && Number(expected) !== amount) {
+      return res.status(409).json({ error: `Price mismatch: the shop shows Rs ${expected} but the server calculated Rs ${amount}. The server price file is out of date. Run "node build-catalog.js" and redeploy all files.` });
+    }
 
     const orderId = 'DHM' + Date.now() + Math.floor(Math.random() * 900 + 100);
     const prod = process.env.CASHFREE_ENV === 'production';
