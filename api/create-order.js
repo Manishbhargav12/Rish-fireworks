@@ -1,8 +1,9 @@
 // Vercel serverless function: creates a Cashfree order.
 // Env vars (Vercel > Project > Settings > Environment Variables):
 //   CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_ENV ("sandbox" or "production"), SITE_URL (optional)
-const DATA = require('./_prices.json');
-const PRICES = DATA.prices, FREE = new Set((DATA.freeShip || []).map(String));
+const PRODUCTS = require('../products.js');   // same file the website uses, so prices can never differ
+const PRICES = Object.fromEntries(PRODUCTS.map(p => [p.id, p.price]));
+const FREE = new Set(PRODUCTS.filter(p => p.free).map(p => String(p.id)));
 const COUPONS = { DIWALI10: 10 };      // keep same as index.html
 const FREE_SHIP_ABOVE = 999, SHIPPING = 60;
 
@@ -29,9 +30,9 @@ module.exports = async (req, res) => {
     const amount = after + ship;
 
     // Safety check: the total the customer saw on the website must equal the total calculated here.
-    // If not, the server files (api/_prices.json) are out of date, so stop instead of charging the wrong amount.
+    // If not, the server copy of products.js is out of date, so stop instead of charging the wrong amount.
     if (expected !== undefined && Number(expected) !== amount) {
-      return res.status(409).json({ error: `Price mismatch: the shop shows Rs ${expected} but the server calculated Rs ${amount}. The server price file is out of date. Run "node build-catalog.js" and redeploy all files.` });
+      return res.status(409).json({ error: `Price mismatch: the shop shows Rs ${expected} but the server calculated Rs ${amount}. The server copy of products.js is out of date. Redeploy so the website and server use the same products.js.` });
     }
 
     const orderId = 'DHM' + Date.now() + Math.floor(Math.random() * 900 + 100);
