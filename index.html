@@ -378,8 +378,8 @@ const CONFIG = {
   freeShipAbove: 999, shipping: 60,   // delivery charge for all India, free above this amount
   blockedStates: [],                  // states where you cannot deliver, e.g. ['Delhi','Tamil Nadu']
   /* ---- Cashfree ---- */
-  demoMode: true,            // true = fake payment so you can preview. Set false when /api is deployed
-  cashfreeMode: 'sandbox',   // 'sandbox' or 'production'
+  demoMode: false,            // true = fake payment so you can preview. Set false when /api is deployed
+  cashfreeMode: 'production',   // 'sandbox' or 'production'
   apiBase: ''                // '' = same domain (Vercel). Otherwise e.g. 'https://your-api.example.com'
 };
 const COUPONS = { DIWALI10: 10 };   // code -> % off (keep same in api/create-order.js)
