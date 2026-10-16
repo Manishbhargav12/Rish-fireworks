@@ -1,7 +1,7 @@
 // Netlify function: creates a Cashfree order.
 // Env vars (Netlify > Site configuration > Environment variables):
 //   CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_ENV ("sandbox" or "production"), SITE_URL (optional)
-const PRODUCTS = require('../products.js');   // same file the website uses, so prices can never differ
+const PRODUCTS = require('../../products.js');   // same file the website uses, so prices can never differ
 const PRICES = Object.fromEntries(PRODUCTS.map(p => [p.id, p.price]));
 const FREE = new Set(PRODUCTS.filter(p => p.free).map(p => String(p.id)));
 const COUPONS = { DIWALI10: 10 };      // keep same as index.html
