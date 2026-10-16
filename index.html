@@ -314,7 +314,27 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8C3Y158H1G', { send_page_view: false });
+
+  // your shop changes pages with #/ links, so send each one as a page view
+  function trackPage() {
+    var path = '/' + (location.hash.replace(/^#\/?/, '') || '');
+    gtag('event', 'page_view', {
+      page_path: path,
+      page_location: location.href,
+      page_title: document.title
+    });
+  }
+  window.addEventListener('hashchange', trackPage);
+  window.addEventListener('load', trackPage);
+</script>
 </head>
+  
 <body>
 
 <header class="site">
