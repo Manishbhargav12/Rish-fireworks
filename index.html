@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dhamaka Fireworks - Diwali Crackers Online, Ahmedabad</title>
+<title>Rish Fireworks - Diwali Crackers Online, Ahmedabad</title>
 <meta name="description" content="Buy Sivakasi crackers, sky shots, flower pots and Diwali gift boxes online. Store in Vastrapur, Ahmedabad. Delivery across India.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
-<script src="https://sdk.cashfree.com/js/v3/cashfree.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="products.js"></script>
 <style>
 :root{
@@ -181,6 +181,10 @@ section.blk{padding-block:4rem}
 .brand{font-size:.8rem;color:var(--marigold);font-weight:600}
 a.brand:hover{text-decoration:underline}
 .pager{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:2rem 0 0}
+.upi-box{display:flex;gap:1.6rem;flex-wrap:wrap;align-items:center}
+.qrbox{background:#fff;padding:12px;border-radius:16px;line-height:0;min-width:224px;min-height:224px;display:grid;place-items:center}
+.upi-id{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;font-size:1.2rem;margin:.3rem 0}
+.warn{padding:1rem 1.2rem;border:1px solid var(--marigold);border-radius:14px;background:rgba(255,178,30,.1);color:#ffe3a3;margin-bottom:1rem}
 /* page head, shop */
 .page-h{padding:2.4rem 0 1.2rem}
 .page-h h1{font-size:clamp(2rem,4vw,3rem)}
@@ -314,30 +318,7 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-8C3Y158H1G', { send_page_view: false });
-
-  // your shop changes pages with #/ links, so send each one as a page view
-  function trackPage() {
-    var path = '/' + (location.hash.replace(/^#\/?/, '') || '');
-    gtag('event', 'page_view', {
-      page_path: path,
-      page_location: location.href,
-      page_title: document.title
-    });
-  }
-  window.addEventListener('hashchange', trackPage);
-  window.addEventListener('load', trackPage);
-</script>
-  <!-- Meta Pixel Code -->
-  <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;
-  n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '3278846772313260'); fbq('track', 'PageView');</script><noscript> <img height="1" width="1" src="https://www.facebook.com/tr?id=3278846772313260&ev=PageView&noscript=1"/></noscript><!-- End Meta Pixel Code -->
 </head>
-  
 <body>
 
 <header class="site">
@@ -346,7 +327,7 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
     <div class="tb-right"><a class="ph" id="phLink"></a><div class="social" id="socialTop"></div></div>
   </div></div>
   <div class="wrap nav">
-    <a class="logo" href="#/"><i>🪔</i>Dhamaka Fireworks</a>
+    <a class="logo" href="#/"><i>🪔</i>Rish Fireworks</a>
     <nav class="nav-links" id="navLinks">
       <a href="#/" data-nav="home">Home</a>
       <a href="#/shop" data-nav="shop">All crackers</a>
@@ -367,7 +348,7 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
 <footer>
   <div class="wrap">
     <div class="fcols">
-      <div><a class="logo" href="#/"><i>🪔</i>Dhamaka Fireworks</a>
+      <div><a class="logo" href="#/"><i>🪔</i>Rish Fireworks</a>
         <p class="muted" style="margin-top:.8rem;max-width:32ch">Sivakasi crackers, sky shots and family gift boxes for a safe, bright Diwali.</p>
         <div class="social" id="socialFoot" style="margin-top:1rem"></div></div>
       <div><h4>Shop</h4><ul id="fCats"></ul></div>
@@ -379,6 +360,7 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
   </div>
 </footer>
 
+<form name="orders" data-netlify="true" hidden><input name="order_id"><input name="name"><input name="phone"><input name="email"><input name="mode"><input name="utr"><input name="total"><textarea name="details"></textarea></form>
 <div class="ov" id="ov"></div>
 <aside class="drawer" id="drawer" aria-label="Added to cart"></aside>
 <div class="toast" id="toast" role="status"></div>
@@ -386,7 +368,7 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
 <script>
 /* ============================== CONFIG ============================== */
 const CONFIG = {
-  brand: 'Dhamaka Fireworks',
+  brand: 'Rish Fireworks',
   address: 'Shop 4, Devsrushti, 2, Lad Society Rd, Vastrapur, Ahmedabad, Gujarat 380015',
   phone: '+91 98765 43210',            // change to your number
   email: 'hello@dhamakafireworks.in',  // change
@@ -401,12 +383,13 @@ const CONFIG = {
   diwaliDate: '2026-11-08T18:00:00+05:30',   // countdown target
   freeShipAbove: 999, shipping: 60,   // delivery charge for all India, free above this amount
   blockedStates: [],                  // states where you cannot deliver, e.g. ['Delhi','Tamil Nadu']
-  /* ---- Cashfree ---- */
-  demoMode: false,            // true = fake payment so you can preview. Set false when /api is deployed
-  cashfreeMode: 'production',   // 'sandbox' or 'production'
-  apiBase: ''                // '' = same domain (Vercel). Otherwise e.g. 'https://your-api.example.com'
+  /* ---- Payment: direct UPI to your own account (no payment gateway) ---- */
+  upiId: 'yourname@bank',          // YOUR UPI ID (from your business or savings bank account)
+  upiName: 'Rish Fireworks',       // name put in the QR link. UPI apps usually show the name registered with the bank
+  whatsappNumber: '919876543210'   // WhatsApp number that receives orders: country code first, no + or spaces
 };
-const COUPONS = { DIWALI10: 10 };   // code -> % off (keep same in api/create-order.js)
+CONFIG.social.whatsapp = 'https://wa.me/' + CONFIG.whatsappNumber;
+const COUPONS = { DIWALI10: 10 };   // code -> % off
 
 /* ============================== DATA ============================== */
 const CATS = [
@@ -447,6 +430,7 @@ const ICON={
 };
 const socialHtml=()=>`<a href="${CONFIG.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ICON.ig}</a><a href="${CONFIG.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${ICON.fb}</a><a href="${CONFIG.social.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${ICON.yt}</a><a href="${CONFIG.social.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICON.wa}</a>`;
 const mapsLink=()=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(CONFIG.address);
+const waLink=text=>'https://wa.me/'+CONFIG.whatsappNumber+'?text='+encodeURIComponent(text);
 const mapsEmbed=()=>'https://www.google.com/maps?q='+encodeURIComponent(CONFIG.address)+'&output=embed';
 
 /* dummy artwork: replace by setting `img:'images/your-file.jpg'` on any product */
@@ -563,7 +547,7 @@ function pageHome(){
 <section class="blk wrap" style="padding-top:0"><div class="why">
   <div><i>🏭</i><h3>Top Sivakasi brands</h3><p>Anil, Standard, Sony, Sunshine, Mercury and more, all in one store.</p></div>
   <div><i>🚚</i><h3>Delivery across India</h3><p>Free above ${fmt(CONFIG.freeShipAbove)}, otherwise ${fmt(CONFIG.shipping)}. Or pick up from our Vastrapur store at no cost.</p></div>
-  <div><i>🔒</i><h3>Secure payments</h3><p>Pay with UPI, cards, netbanking or wallets through Cashfree.</p></div>
+  <div><i>🔒</i><h3>Secure payments</h3><p>Pay by UPI from any app, or pay at the shop when you collect.</p></div>
   <div><i>🛡️</i><h3>Safety first</h3><p>Crackers are sold to buyers aged 18 and above, with a safety leaflet in every order.</p></div>
 </div></section>
 
@@ -621,8 +605,9 @@ function pageProduct(id){
       <p style="margin-top:1rem;color:#eadcc0;max-width:52ch">${esc(p.desc)}</p>
       <div class="buy"><div class="qty"><button data-act="pq" data-d="-1" aria-label="Less">−</button><span id="pq">1</span><button data-act="pq" data-d="1" aria-label="More">+</button></div>
         <button class="btn lg" data-act="add" data-id="${p.id}" data-qty="pq">Add to cart</button>
-        <button class="btn ghost lg" data-act="buy" data-id="${p.id}" data-qty="pq">Buy now</button></div>
-      <div class="trust"><div><b>Pay securely</b>UPI, cards, netbanking</div><div><b>Pickup or delivery</b>Vastrapur store or delivery across India</div><div><b>Buyers 18 and above</b>Crackers are sold to adults only</div></div>
+        <button class="btn ghost lg" data-act="buy" data-id="${p.id}" data-qty="pq">Buy now</button>
+        <a class="btn ghost lg" target="_blank" rel="noopener" href="${waLink('Hi, I want to order: '+p.name+' ('+fmt(p.price)+')')}">Ask on WhatsApp</a></div>
+      <div class="trust"><div><b>Pay by UPI</b>Any UPI app, or pay at the shop</div><div><b>Pickup or delivery</b>Vastrapur store or delivery across India</div><div><b>Buyers 18 and above</b>Crackers are sold to adults only</div></div>
     </div>
   </div>
   ${bun.length?`<h2 style="font-size:1.8rem;margin-top:1rem">Bought together</h2>
@@ -686,43 +671,64 @@ function pageCheckout(){
     <div class="ln"><span>${state.pickup?'Store pickup':'Delivery'}</span><span>${t.ship?fmt(t.ship):'<span class="g">Free</span>'}</span></div>
     <div class="ln tot"><span>Total</span><span>${fmt(t.total)}</span></div>
     <div class="coupon"><input class="f" id="cpn" placeholder="Coupon code" value="${esc(state.coupon)}"><button type="button" class="btn ghost" style="padding-inline:1rem" data-act="coupon">Apply</button></div>
-    <button class="btn lg" id="payBtn" type="submit" style="width:100%">Pay ${fmt(t.total)} with Cashfree</button>
-    <p class="note">Secure payment by Cashfree: UPI, cards, netbanking and wallets.${CONFIG.demoMode?' <b style="color:var(--marigold)">Demo mode is on, no money will be charged.</b>':''}</p>
+    <button class="btn lg" id="payBtn" type="submit" style="width:100%">Continue to pay ${fmt(t.total)}</button>
+    <p class="note">Next step: pay by UPI from any app, or choose to pay at the shop or on delivery.</p>
   </aside></form></div>`;
 }
 
-async function pageOrder(id){
-  const app=$('#app'); app.innerHTML=`<div class="wrap"><div class="status"><div class="spin"></div><p class="muted">Confirming your payment</p></div></div>`;
-  let st='PAID';
-  if(!id.startsWith('DEMO')){
-    try{const r=await fetch(CONFIG.apiBase+'/api/order-status?order_id='+encodeURIComponent(id));const d=await r.json();st=d.order_status||'UNKNOWN'}catch{st='UNKNOWN'}
-  }
-  if(location.hash.indexOf(id)<0) return;
-  const last=store.get('dk_last',null), mine=last&&last.id===id?last:null;
-  if(st==='PAID'){
-    state.cart={};state.coupon='';save();
-    app.innerHTML=`<div class="wrap"><div class="status"><div class="big">🎆</div><h1>Order confirmed, Shubh Deepavali!</h1>
-      <p class="muted">Order ID <b style="color:var(--cream)">${esc(id)}</b>${mine?`<br>${mine.pickup?'Collect from our Vastrapur store':'We will deliver to '+esc(mine.address)}`:''}</p>
-      ${mine?`<p style="margin-top:1rem;font-size:1.2rem">Paid ${fmt(mine.total)}</p>`:''}
-      <p class="note">We will message you on WhatsApp or SMS with delivery details.</p>
-      <div class="cta" style="justify-content:center"><a class="btn" href="#/shop">Keep shopping</a><a class="btn ghost" href="#/">Back to home</a></div></div></div>`;
-  }else if(st==='ACTIVE'||st==='PENDING'||st==='UNKNOWN'){
-    app.innerHTML=`<div class="wrap"><div class="status"><div class="big">⏳</div><h1>Payment is being confirmed</h1><p class="muted">Order ID ${esc(id)}. If money was debited, it will be confirmed shortly. Please do not pay again.</p><div class="cta" style="justify-content:center"><button class="btn" onclick="location.reload()">Check again</button></div></div></div>`;
-  }else{
-    app.innerHTML=`<div class="wrap"><div class="status"><div class="big">😕</div><h1>Payment did not go through</h1><p class="muted">Your cart is safe. Please try again.</p><div class="cta" style="justify-content:center"><a class="btn" href="#/checkout">Try again</a></div></div></div>`;
-  }
-  window.scrollTo(0,0);
-}
+const upiLink=o=>'upi://pay?pa='+encodeURIComponent(CONFIG.upiId)+'&pn='+encodeURIComponent(CONFIG.upiName)+'&am='+Number(o.total).toFixed(2)+'&cu=INR&tn='+encodeURIComponent('Order '+o.id);
+const upiReady=()=>!/^\s*$|yourname@/i.test(CONFIG.upiId||'');
 
+function pagePay(id){
+  const o=store.get('dk_order',null);
+  if(!o||o.id!==id) return `<div class="wrap"><div class="empty" style="padding-block:6rem"><h3>We could not find this order</h3><p style="margin-top:1rem"><a class="btn" href="#/cart">Back to cart</a></p></div></div>`;
+  if(o.sent) return pageDone(id);
+  return `<div class="wrap"><div class="page-h"><div class="crumbs"><a href="#/cart">Cart</a> / <a href="#/checkout">Checkout</a> / Pay</div><h1>Pay ${fmt(o.total)}</h1></div>
+  <div class="cols"><div>
+    <div class="fbox"><h3>Step 1. Pay ${fmt(o.total)} by UPI</h3>
+    ${upiReady()?`<div class="upi-box"><div class="qrbox"><div id="qr"></div></div>
+      <div><p class="muted">Scan with any UPI app, or pay to this UPI ID</p>
+      <div class="upi-id"><b>${esc(CONFIG.upiId)}</b><button type="button" class="link" data-pay="copy">Copy</button></div>
+      <p>Amount: <b>${fmt(o.total)}</b> <span class="muted">(please pay exactly this)</span></p>
+      <p class="note">On a phone, tap the button to open your UPI app.</p>
+      <a class="btn" href="${esc(upiLink(o))}">Open UPI app</a></div></div>`
+    :`<div class="warn">UPI payment is not set up yet. Please use "pay at the shop or on delivery" below.</div>`}</div>
+    ${upiReady()?`<div class="fbox"><h3>Step 2. Enter your UTR / reference number</h3>
+      <input class="f" id="utr" inputmode="numeric" maxlength="12" placeholder="12 digit UTR or UPI reference number" autocomplete="off">
+      <p class="note">Find it in your UPI app under the payment details. We check it against our bank account before we confirm your order.</p>
+      <p class="note" id="utrErr" style="color:#ff8a8a"></p>
+      <button class="btn lg" data-pay="paid" style="margin-top:.6rem">I have paid, send my order on WhatsApp</button></div>`:''}
+    <div class="fbox"><h3>${upiReady()?'Prefer to pay later?':'Place your order'}</h3><p class="muted" style="margin-bottom:.8rem">Send your order now and pay cash or UPI when you collect it from the shop or when it is delivered.</p>
+      <button class="btn ghost" data-pay="later">Send order, pay at the shop or on delivery</button></div>
+  </div>
+  <aside class="sum-box"><h3>Your order</h3>
+    ${o.items.map(i=>`<div class="ln" style="font-size:.93rem"><span>${esc(i.name)} × ${i.qty}</span><span>${fmt(i.price*i.qty)}</span></div>`).join('')}
+    <div style="border-top:1px dashed var(--line);margin:.6rem 0"></div>
+    ${o.off?`<div class="ln"><span>Coupon ${esc(o.coupon)}</span><span class="g">−${fmt(o.off)}</span></div>`:''}
+    <div class="ln"><span>${o.pickup?'Store pickup':'Delivery'}</span><span>${o.ship?fmt(o.ship):'<span class="g">Free</span>'}</span></div>
+    <div class="ln tot"><span>Total</span><span>${fmt(o.total)}</span></div>
+    <p class="note">${o.pickup?'Collect from our Vastrapur store.':'Deliver to: '+esc(o.address)}</p></aside></div></div>`;
+}
+function pageDone(id){
+  const o=store.get('dk_order',null);
+  if(!o||o.id!==id||!o.sent) return notFound();
+  const paid=o.mode==='paid';
+  return `<div class="wrap"><div class="status"><div class="big">🎆</div><h1>${paid?'Order sent, we will check your payment':'Order request sent'}</h1>
+    <p class="muted">Order ID <b style="color:var(--cream)">${esc(o.id)}</b><br>${paid?'We will check your payment (UTR '+esc(o.utr)+') and confirm on WhatsApp.':'We will confirm your order on WhatsApp. You can pay at the shop or on delivery.'}</p>
+    <p style="margin-top:1rem;font-size:1.2rem">Total ${fmt(o.total)}</p>
+    <p class="note">${o.pickup?'Collect from our Vastrapur store and show this order ID.':'Delivery to '+esc(o.address)}</p>
+    <p class="note">If WhatsApp did not open, tap the button to send us your order message.</p>
+    <div class="cta" style="justify-content:center"><a class="btn" target="_blank" rel="noopener" href="${esc(o.waUrl)}">Send on WhatsApp</a><a class="btn ghost" href="#/shop">Keep shopping</a></div></div></div>`;
+}
 function pageContact(){
   return `<div class="wrap"><div class="page-h"><div class="crumbs"><a href="#/">Home</a> / Visit us</div><h1>Visit our store</h1></div>
   <div class="visit" style="padding-bottom:3rem"><div class="info">
-    <div class="fbox" style="margin:0"><h3>Dhamaka Fireworks</h3>
+    <div class="fbox" style="margin:0"><h3>Rish Fireworks</h3>
       <p>${esc(CONFIG.address)}</p><p class="muted" style="margin-top:.5rem">Open ${esc(CONFIG.hours)}</p>
       <p style="margin-top:.8rem"><a href="tel:${CONFIG.phone.replace(/\s/g,'')}" style="color:var(--marigold)">${esc(CONFIG.phone)}</a><br><a href="mailto:${CONFIG.email}" style="color:var(--marigold)">${esc(CONFIG.email)}</a></p>
       <div class="cta"><a class="btn" target="_blank" rel="noopener" href="${mapsLink()}">Get directions</a><a class="btn ghost" target="_blank" rel="noopener" href="${CONFIG.social.whatsapp}">Chat on WhatsApp</a></div>
       <div class="social" style="margin-top:1.2rem">${socialHtml()}</div></div>
-    <div class="fbox" style="margin:0"><h3>Store pickup</h3><p class="muted">Choose "Pick up from store" at checkout, pay online, and collect your order from the shop. Carry your order ID.</p></div></div>
+    <div class="fbox" style="margin:0"><h3>Store pickup</h3><p class="muted">Choose "Pick up from store" at checkout, pay by UPI or at the shop, and collect your order. Carry your order ID.</p></div></div>
   <div class="map"><iframe title="Store location" loading="lazy" src="${mapsEmbed()}"></iframe></div></div></div>`;
 }
 const notFound=()=>`<div class="wrap"><div class="empty" style="padding-block:6rem"><h3>We could not find that page</h3><p style="margin-top:1rem"><a class="btn" href="#/shop">Go to shop</a></p></div></div>`;
@@ -755,13 +761,13 @@ function route(){
   let nav=pg;
   if(pg==='shop'&&q.get('sort')==='disc') nav='offers';
   $$('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===nav));
-  if(pg==='order'){pageOrder(parts[1]||'');return}
-  const pages={home:()=>pageHome(),shop:()=>pageShop(q),product:()=>pageProduct(+parts[1]),cart:()=>pageCart(),checkout:()=>pageCheckout(),contact:()=>pageContact()};
+  const pages={home:()=>pageHome(),shop:()=>pageShop(q),product:()=>pageProduct(+parts[1]),cart:()=>pageCart(),checkout:()=>pageCheckout(),pay:()=>pagePay(parts[1]||''),order:()=>pageDone(parts[1]||''),contact:()=>pageContact()};
   app.innerHTML=(pages[pg]||notFound)();
   const p=pg==='product'?byId[+parts[1]]:null;
-  document.title=(p?p.name+' - ':pg==='shop'?'Crackers - ':'')+'Dhamaka Fireworks, Ahmedabad';
+  document.title=(p?p.name+' - ':pg==='shop'?'Crackers - ':'')+'Rish Fireworks, Ahmedabad';
   window.scrollTo(0,0);
   if(pg==='home'){startFW();tick()}
+  if(pg==='pay') renderQR();
 }
 
 /* ============================== DRAWER (recommendations after add) ============================== */
@@ -802,10 +808,10 @@ $('#burger').addEventListener('click',()=>$('#navLinks').classList.toggle('open'
 function readForm(){const f=$('#coForm');return f?Object.fromEntries(new FormData(f)):{}}
 function restoreForm(u){const f=$('#coForm');if(!f)return;['name','phone','email','address','city','state','pin'].forEach(k=>{if(u[k]&&f.elements[k])f.elements[k].value=u[k]});if(u.age)f.elements.age.checked=true}
 
-/* ============================== CASHFREE CHECKOUT ============================== */
-document.addEventListener('submit',async e=>{
+/* ============================== CHECKOUT AND UPI PAYMENT ============================== */
+document.addEventListener('submit',e=>{
   if(e.target.id!=='coForm') return; e.preventDefault();
-  const f=e.target, d=Object.fromEntries(new FormData(f)), err=$('#formErr'), btn=$('#payBtn'); err.textContent='';
+  const f=e.target, d=Object.fromEntries(new FormData(f)), err=$('#formErr'); err.textContent='';
   if(!d.name.trim()) return err.textContent='Please enter your name.';
   if(!/^[6-9]\d{9}$/.test(d.phone)) return err.textContent='Enter a valid 10 digit mobile number.';
   if(!/^\S+@\S+\.\S+$/.test(d.email)) return err.textContent='Enter a valid email address.';
@@ -813,22 +819,42 @@ document.addEventListener('submit',async e=>{
   if(!d.age) return err.textContent='Please confirm that you are 18 or older.';
   store.set('dk_user',{name:d.name,phone:d.phone,email:d.email,address:d.address||'',city:d.city||'',state:d.state||'',pin:d.pin||''});
   const t=totals(), addr=state.pickup?'':`${d.address}, ${d.city}, ${d.state} ${d.pin}`;
-  btn.disabled=true; btn.textContent='Starting secure payment...';
-  try{
-    if(CONFIG.demoMode){
-      const id='DEMO'+Date.now().toString(36).toUpperCase();
-      store.set('dk_last',{id,total:t.total,pickup:state.pickup,address:addr});
-      await new Promise(r=>setTimeout(r,900)); location.hash='#/order/'+id; return;
-    }
-    const res=await fetch(CONFIG.apiBase+'/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      items:cartItems().map(({p,q})=>({id:p.id,qty:q})),coupon:state.coupon,pickup:state.pickup,expected:t.total,
-      customer:{name:d.name.trim(),phone:d.phone,email:d.email.trim(),address:addr}})});
-    const data=await res.json(); if(!res.ok||!data.payment_session_id) throw new Error(data.error||'Could not create the order');
-    store.set('dk_last',{id:data.order_id,total:data.amount,pickup:state.pickup,address:addr});
-    if(typeof Cashfree==='undefined') throw new Error('Payment library did not load. Check your internet and try again.');
-    const cf=Cashfree({mode:CONFIG.cashfreeMode});
-    cf.checkout({paymentSessionId:data.payment_session_id,redirectTarget:'_self'});
-  }catch(ex){err.textContent=ex.message||'Something went wrong. Please try again.';btn.disabled=false;btn.textContent='Pay '+fmt(t.total)+' with Cashfree'}
+  const o={id:'RF'+Date.now().toString(36).toUpperCase(),name:d.name.trim(),phone:d.phone,email:d.email.trim(),pickup:state.pickup,address:addr,coupon:state.coupon,
+    items:cartItems().map(({p,q})=>({id:p.id,name:p.name,qty:q,price:p.price})),sub:t.sub,off:t.off,ship:t.ship,total:t.total,time:Date.now()};
+  store.set('dk_order',o); location.hash='#/pay/'+o.id;
+});
+
+function renderQR(tries=0){
+  const el=$('#qr'), o=store.get('dk_order',null); if(!el||!o) return;
+  if(typeof QRCode==='undefined'){ if(tries<24) setTimeout(()=>renderQR(tries+1),250); else el.innerHTML='<p style="line-height:1.4;color:#333;max-width:190px">QR could not load. Please use the UPI ID or the button.</p>'; return; }
+  el.innerHTML=''; new QRCode(el,{text:upiLink(o),width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+}
+function orderMessage(o,mode,utr){
+  const L=['*New order '+o.id+'* - '+CONFIG.brand,'Name: '+o.name,'Phone: '+o.phone,'','Items:'];
+  o.items.forEach(i=>L.push('- '+i.name+' x '+i.qty+' = '+fmt(i.price*i.qty)));
+  L.push('','Subtotal: '+fmt(o.sub)); if(o.off) L.push('Coupon '+o.coupon+': -'+fmt(o.off));
+  L.push((o.pickup?'Store pickup: ':'Delivery: ')+(o.ship?fmt(o.ship):'Free'),'*Total: '+fmt(o.total)+'*','');
+  L.push(o.pickup?'Collect from store':'Deliver to: '+o.address);
+  L.push(mode==='paid'?'Payment: paid by UPI, UTR '+utr:'Payment: will pay at the shop / on delivery');
+  return L.join('\n');
+}
+function recordOrder(o,msg){   // optional copy to Netlify Forms (works only when hosted on Netlify)
+  if(!/^https?:/.test(location.protocol)) return;
+  try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({'form-name':'orders',order_id:o.id,name:o.name,phone:o.phone,email:o.email,mode:o.mode,utr:o.utr,total:String(o.total),details:msg}).toString()}).catch(()=>{})}catch(e){}
+}
+function finalizeOrder(mode,utr){
+  const o=store.get('dk_order',null); if(!o) return;
+  o.mode=mode; o.utr=utr||''; o.sent=true;
+  const msg=orderMessage(o,mode,utr); o.waUrl=waLink(msg);
+  store.set('dk_order',o); recordOrder(o,msg);
+  state.cart={}; state.coupon=''; save();
+  window.open(o.waUrl,'_blank'); location.hash='#/order/'+o.id;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-pay]'); if(!t) return; const a=t.dataset.pay;
+  if(a==='copy'){ if(navigator.clipboard) navigator.clipboard.writeText(CONFIG.upiId).then(()=>toast('UPI ID copied')).catch(()=>toast('Could not copy, please type it')); }
+  else if(a==='paid'){ const u=(($('#utr')||{}).value||'').replace(/\s/g,''); if(!/^\d{12}$/.test(u)){ $('#utrErr').textContent='Enter the 12 digit UTR / reference number from your UPI app.'; return; } finalizeOrder('paid',u); }
+  else if(a==='later'){ finalizeOrder('later',''); }
 });
 
 /* ============================== INIT ============================== */
@@ -840,9 +866,7 @@ document.addEventListener('submit',async e=>{
   $('#fCats').innerHTML=CATS.map(c=>`<li><a href="#/shop?cat=${c.id}">${c.name}</a></li>`).join('');
   $('#fContact').innerHTML=`<li>${esc(CONFIG.address)}</li><li>${esc(CONFIG.phone)}</li><li>${esc(CONFIG.email)}</li><li>${esc(CONFIG.hours)}</li>`;
   $('#legal').innerHTML=`Fireworks are hazardous. Sales are subject to applicable local laws, court orders and licence conditions, and only buyers aged 18 and above may purchase. ${esc(CONFIG.licence)}<br>© ${new Date().getFullYear()} ${esc(CONFIG.brand)}. Images shown are for illustration.`;
-  // return from Cashfree: /?order_id=XXXX
-  const oid=new URLSearchParams(location.search).get('order_id');
-  if(oid) history.replaceState(null,'',location.pathname+'#/order/'+encodeURIComponent(oid));
+  if(!upiReady()) console.warn('Set CONFIG.upiId in index.html so customers can pay by UPI.');
   badge(); window.addEventListener('hashchange',route); route();
 })();
 </script>
