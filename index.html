@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
-<!-- >>> CHANGE #1: YouPI PG script. Replace BOTH values: your gateway domain (pay.yourdomain.com) and your Merchant PUBLIC key from the YouPI Merchant Admin panel. <<< -->
-<script src="https://pay.yourdomain.com/youpi.js" data-youpi-key="YOUR_MERCHANT_PUBLIC_KEY" data-currency="INR" defer></script>
+<!-- PayQ: QR code renderer (payment itself runs through /api/create-order and /api/order-status) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script src="products.js"></script>
 <style>
 :root{
@@ -314,6 +314,15 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
   .gift{grid-template-columns:1fr}.gift img{height:180px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+.pq-ov{position:fixed;inset:0;z-index:300;background:rgba(10,4,20,.82);display:grid;place-items:center;padding:1rem}
+.pq-box{width:min(380px,100%);background:var(--violet);border:1px solid var(--line);border-radius:24px;padding:1.5rem;text-align:center}
+.pq-box h3{font-size:1.4rem;margin-bottom:.2rem}
+.pq-amt{font-size:2rem;font-weight:700;margin:.2rem 0 .8rem}
+.pq-qr{background:#fff;border-radius:16px;padding:14px;display:inline-block;min-width:200px;min-height:200px}
+.pq-qr img,.pq-qr canvas{display:block}
+.pq-st{margin:.9rem 0 .4rem;font-size:.95rem}
+.pq-box .btn{width:100%;margin-top:.5rem}
 </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>
@@ -402,12 +411,12 @@ const CONFIG = {
   diwaliDate: '2026-11-08T18:00:00+05:30',   // countdown target
   freeShipAbove: 999, shipping: 60,   // delivery charge for all India, free above this amount
   blockedStates: [],                  // states where you cannot deliver, e.g. ['Delhi','Tamil Nadu']
-  /* ---- YouPI PG (self-hosted UPI gateway) ---- */
-  /* >>> CHANGE #2: set your WhatsApp number (country code first, no + or spaces). Orders (items, address) are sent here after payment. <<< */
+  /* ---- PayQ UPI checkout ---- */
+  /* >>> CHANGE #1: set your WhatsApp number (country code first, no + or spaces). Orders (items, address) are sent here after payment. <<< */
   whatsappNumber: '919876543210',
-  demoMode: true              // >>> CHANGE #3: true = fake payment so you can preview. Set to false once CHANGE #1 is done and your YouPI server is running <<<
+  demoMode: true              
 };
-const COUPONS = { DIWALI10: 10 };   // code -> % off (checked in the browser only; the YouPI gateway just collects the final amount)
+const COUPONS = { DIWALI10: 10 };   // code -> % off (the server re-checks it in payq-core.js)
 
 /* ============================== DATA ============================== */
 const CATS = [
@@ -688,11 +697,11 @@ function pageCheckout(){
     <div class="ln tot"><span>Total</span><span>${fmt(t.total)}</span></div>
     <div class="coupon"><input class="f" id="cpn" placeholder="Coupon code" value="${esc(state.coupon)}"><button type="button" class="btn ghost" style="padding-inline:1rem" data-act="coupon">Apply</button></div>
     <button class="btn lg" id="payBtn" type="submit" style="width:100%">Pay ${fmt(t.total)} with UPI</button>
-    <p class="note">Verify your WhatsApp number, scan the QR or tap your UPI app, and pay.${CONFIG.demoMode?' <b style="color:var(--marigold)">Demo mode is on, no money will be charged.</b>':''}</p>
+    <p class="note">Scan the QR or tap your UPI app to pay.${CONFIG.demoMode?' <b style="color:var(--marigold)">Demo mode is on, no money will be charged.</b>':''}</p>
   </aside></form></div>`;
 }
 
-/* order details for the shop owner, sent on WhatsApp after the customer pays (YouPI itself only knows the order ID and amount) */
+/* order details for the shop owner, sent on WhatsApp after the customer pays (PayQ itself only knows the order ID and amount) */
 function orderMessage(o){
   const L=['*New order '+o.id+'* - '+CONFIG.brand,'Name: '+o.name,'Phone: '+o.phone,'','Items:'];
   o.items.forEach(i=>L.push('- '+i.name+' x '+i.qty+' = '+fmt(i.price*i.qty)));
@@ -810,7 +819,27 @@ $('#burger').addEventListener('click',()=>$('#navLinks').classList.toggle('open'
 function readForm(){const f=$('#coForm');return f?Object.fromEntries(new FormData(f)):{}}
 function restoreForm(u){const f=$('#coForm');if(!f)return;['name','phone','email','address','city','state','pin'].forEach(k=>{if(u[k]&&f.elements[k])f.elements[k].value=u[k]});if(u.age)f.elements.age.checked=true}
 
-/* ============================== YOUPI PG CHECKOUT ============================== */
+/* ============================== PAYQ CHECKOUT ============================== */
+function payqModal({amount,upi,expiresMs,onCancel}){
+  const ov=document.createElement('div'); ov.className='pq-ov';
+  ov.innerHTML=`<div class="pq-box"><h3>Pay with UPI</h3><div class="pq-amt">${fmt(amount)}</div>
+    <div class="pq-qr" id="pqQr"></div>
+    <p class="pq-st" id="pqSt">Waiting for payment... <span id="pqT"></span></p>
+    <a class="btn" id="pqApp" href="${esc(upi)}">Open UPI app</a>
+    <button class="btn ghost" type="button" id="pqX">Cancel</button>
+    <p class="note">Scan with any UPI app. Do not close this window until it says paid.</p></div>`;
+  document.body.appendChild(ov);
+  if(window.QRCode) new QRCode(ov.querySelector('#pqQr'),{text:upi,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  else ov.querySelector('#pqQr').textContent='QR failed to load, use the button below.';
+  const tEl=ov.querySelector('#pqT'), end=Date.now()+expiresMs;
+  const tick=setInterval(()=>{const s=Math.max(0,Math.round((end-Date.now())/1000));tEl.textContent='('+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+')'},500);
+  const api={ el:ov, expired:()=>Date.now()>end, say:t=>ov.querySelector('#pqSt').textContent=t,
+    close:()=>{clearInterval(tick);ov.remove()} };
+  ov.querySelector('#pqX').onclick=()=>{api.close();onCancel&&onCancel()};
+  return api;
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
 document.addEventListener('submit',async e=>{
   if(e.target.id!=='coForm') return; e.preventDefault();
   const f=e.target, d=Object.fromEntries(new FormData(f)), err=$('#formErr'), btn=$('#payBtn'); err.textContent='';
@@ -823,25 +852,35 @@ document.addEventListener('submit',async e=>{
   const t=totals(), addr=state.pickup?'':`${d.address}, ${d.city}, ${d.state} ${d.pin}`;
   const reset=()=>{btn.disabled=false;btn.textContent='Pay '+fmt(t.total)+' with UPI'};
   btn.disabled=true; btn.textContent='Starting secure payment...';
-  // our own order ID and a saved copy of the order (used for the confirmation page and the WhatsApp message)
-  const id=(CONFIG.demoMode?'DEMO':'DK')+Date.now().toString(36).toUpperCase();
+  const items=cartItems().map(({p,q})=>({name:p.name,qty:q,price:p.price}));
+  let id=(CONFIG.demoMode?'DEMO':'DK')+Date.now().toString(36).toUpperCase();
   const order={id,name:d.name.trim(),phone:d.phone,email:d.email.trim(),pickup:state.pickup,address:addr,coupon:state.coupon,
-    items:cartItems().map(({p,q})=>({name:p.name,qty:q,price:p.price})),sub:t.sub,off:t.off,ship:t.ship,total:t.total,paid:false,utr:''};
+    items,sub:t.sub,off:t.off,ship:t.ship,total:t.total,paid:false,utr:''};
   store.set('dk_last',order);
-  const done=utr=>{const o=store.get('dk_last',order);o.paid=true;o.utr=utr||'';store.set('dk_last',o);location.hash='#/order/'+id};
+  const done=utr=>{const o=store.get('dk_last',order);o.id=id;o.paid=true;o.utr=utr||'';store.set('dk_last',o);location.hash='#/order/'+id};
   try{
-    if(CONFIG.demoMode){ await new Promise(r=>setTimeout(r,900)); done('DEMO'); return; }
-    if(!window.Youpi||!window.Youpi.pay) throw new Error('Payment window did not load. Check your internet and try again.');
-    // >>> YouPI opens its own modal (WhatsApp OTP, then UPI QR). handler() runs after the gateway confirms the payment. <<<
-    window.Youpi.pay({
-      order_id:id,
-      amount:Number(t.total),
-      currency:'INR',
-      name:CONFIG.brand,
-      description:'Order '+id,
-      handler:function(res){ if(res&&res.status==='SUCCESS') done(res.utr); else {err.textContent='Payment was not confirmed. Please try again.';reset();} },
-      onClose:function(){ if(!store.get('dk_last',order).paid) reset(); }
-    });
+    if(CONFIG.demoMode){ await sleep(900); done('DEMO'); return; }
+
+    // 1. server recomputes the amount from products.js and creates the PayQ order
+    const r=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      items:cartItems().map(({p,q})=>({id:p.id,qty:q})), coupon:state.coupon, pickup:state.pickup, expected:t.total,
+      customer:{name:d.name.trim(),phone:d.phone,email:d.email.trim(),address:addr}})});
+    const o=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(o.error||'Could not start the payment. Please try again.');
+    id=o.order_id; order.id=id; store.set('dk_last',order);
+
+    // 2. show the UPI QR, then wait for the server to confirm (webhook / PayQ lookup)
+    let cancelled=false;
+    const m=payqModal({amount:o.amount,upi:o.qr_string,
+      expiresMs:o.expires_at&&!isNaN(Date.parse(o.expires_at))?Math.max(60000,Date.parse(o.expires_at)-Date.now()):600000,
+      onCancel:()=>{cancelled=true;reset()}});
+    while(!cancelled){
+      await sleep(3000);
+      if(cancelled) break;
+      if(m.expired()){ m.close(); err.textContent='The payment window expired. If money was debited, WhatsApp us your order ID '+id+'. Otherwise try again.'; reset(); return; }
+      const s=await fetch('/api/order-status?order_id='+encodeURIComponent(id),{cache:'no-store'}).then(x=>x.json()).catch(()=>null);
+      if(s&&s.paid){ m.say('Payment received!'); await sleep(600); m.close(); done(s.utr); return; }
+    }
   }catch(ex){err.textContent=ex.message||'Something went wrong. Please try again.';reset()}
 });
 

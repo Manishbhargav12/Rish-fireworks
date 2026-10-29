@@ -5,7 +5,9 @@ Folder contents
 - images/              236 web-ready product photos, sorted by category
 - products.csv         ALL products: name, category, brand, price, MRP, image, featured. Edit this in Excel / Google Sheets
 - build-catalog.js     applies products.csv to the website:  node build-catalog.js
-- api/                 Cashfree server functions (create-order.js, order-status.js, _prices.json)
+- payq-core.js         PayQ integration logic (shared)
+api/                 Vercel functions: create-order, order-status, payq-webhook
+netlify/functions/   same three functions for Netlify
 - skipped-images.txt   photos that were not used
 
 ## 1. Preview
@@ -23,17 +25,19 @@ To add a product: add a row with the next id and copy its photo into images/.
 ## 3. Your details
 Top of the <script> in index.html: CONFIG (phone, email, social links, licence number, Diwali date, delivery charge).
 
-## 4. Go live with Cashfree (Vercel)
-1. Create a Cashfree Payment Gateway account and copy the App ID and Secret Key (Sandbox first).
-2. Push this folder to GitHub and import it in Vercel (no build settings needed).
-3. In Vercel > Settings > Environment Variables add:
-     CASHFREE_APP_ID      = your App ID
-     CASHFREE_SECRET_KEY  = your Secret Key
-     CASHFREE_ENV         = sandbox      (change to production when you go live)
+## 4. Go live with PayQ (Vercel or Netlify)
+How it works: the browser asks /api/create-order, the server recomputes the amount from products.js and creates a PayQ order,
+the customer scans the UPI QR, PayQ calls /api/payq-webhook (HMAC-verified) and the page polls /api/order-status until paid.
+1. Push this folder to GitHub and import it in Vercel (or Netlify).
+2. Add Environment Variables (see .env.example):
+     PAYQ_USER_TOKEN      = your PayQ User token
+     PAYQ_SIGNING_SECRET  = your PayQ Signing secret key
      SITE_URL             = https://your-domain.com   (optional)
-4. In index.html CONFIG set  demoMode:false  and  cashfreeMode:'sandbox'  (or 'production').
-5. Test with Cashfree's test UPI/cards, then switch CASHFREE_ENV and cashfreeMode to production.
-Never put the Secret Key inside index.html.
+3. Redeploy, then in index.html CONFIG set  demoMode:false.
+4. Make one Rs 1-10 test order and confirm the QR appears and the page flips to "Order placed".
+5. All PayQ-specific names (endpoint, status words, signature header) are in the PAYQ block at the top of payq-core.js.
+   They were taken from the sample on payq.cc; compare once with payq.cc/merchant/documentation.
+Never put the token or secret inside index.html or commit them to GitHub.
 
 ## 5. Before you launch: photos and legal
 - The photos came from other sellers' product pages and show other companies' brands, logos, and in some cases
