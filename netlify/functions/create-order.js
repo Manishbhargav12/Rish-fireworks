@@ -8,5 +8,5 @@ exports.handler = async (event) => {
     try { body = JSON.parse(event.body || '{}'); } catch (e) { return json(400, { error: 'Bad request' }); }
     const r = await core.createOrder(body, event.headers.host);
     return json(r.status, r.body);
-  } catch (e) { return json(500, { error: 'Server error. Please try again.' }); }
+  } catch (e) { console.error('create-order failed:', e); return json(500, { error: 'Server error: ' + (e && e.message) + (e && e.cause ? ' / ' + (e.cause.code || e.cause.message) : '') }); }
 };
