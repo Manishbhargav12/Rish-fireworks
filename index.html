@@ -842,6 +842,34 @@ function payqModal({amount,upi,expiresMs,onCancel}){
 }
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
+/* ============================== MANUAL UPI CHECKOUT (pay to your own UPI ID) ============================== */
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+function upiModal({amount,orderId,onPaid,onCancel}){
+  const link='upi://pay?pa='+encodeURIComponent(CONFIG.upiId)+'&pn='+encodeURIComponent(CONFIG.upiName)
+    +'&am='+Number(amount).toFixed(2)+'&cu=INR&tn='+encodeURIComponent('Order '+orderId);
+  const ov=document.createElement('div'); ov.className='pq-ov';
+  ov.innerHTML=`<div class="pq-box"><h3>Pay with UPI</h3><div class="pq-amt">${fmt(amount)}</div>
+    <div class="pq-qr" id="pqQr"></div>
+    <p class="pq-st">Pay to <b>${esc(CONFIG.upiId)}</b><br>Order ${esc(orderId)}</p>
+    <a class="btn" href="${esc(link)}">Open UPI app</a>
+    <p class="pq-st">After paying, enter the 12 digit UPI reference (UTR) from your payment app:</p>
+    <input id="pqUtr" inputmode="numeric" maxlength="12" placeholder="12 digit UTR" style="width:100%;padding:.8rem;border-radius:12px;border:1px solid var(--line);background:transparent;color:inherit;text-align:center;font-size:1.1rem">
+    <p class="note" id="pqErr" style="color:#ff8a8a;min-height:1.2em"></p>
+    <button class="btn" type="button" id="pqOk">I have paid</button>
+    <button class="btn ghost" type="button" id="pqX">Cancel</button>
+    <p class="note">Your order is confirmed after we verify the payment in our bank account.</p></div>`;
+  document.body.appendChild(ov);
+  if(window.QRCode) new QRCode(ov.querySelector('#pqQr'),{text:link,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  else ov.querySelector('#pqQr').textContent='QR failed to load, use the button below.';
+  ov.querySelector('#pqOk').onclick=()=>{
+    const u=ov.querySelector('#pqUtr').value.trim();
+    if(!/^\d{12}$/.test(u)) return ov.querySelector('#pqErr').textContent='Enter the 12 digit UTR number.';
+    ov.remove(); onPaid(u);
+  };
+  ov.querySelector('#pqX').onclick=()=>{ov.remove();onCancel&&onCancel()};
+}
+
 document.addEventListener('submit',async e=>{
   if(e.target.id!=='coForm') return; e.preventDefault();
   const f=e.target, d=Object.fromEntries(new FormData(f)), err=$('#formErr'), btn=$('#payBtn'); err.textContent='';
@@ -853,15 +881,41 @@ document.addEventListener('submit',async e=>{
   store.set('dk_user',{name:d.name,phone:d.phone,email:d.email,address:d.address||'',city:d.city||'',state:d.state||'',pin:d.pin||''});
   const t=totals(), addr=state.pickup?'':`${d.address}, ${d.city}, ${d.state} ${d.pin}`;
   const reset=()=>{btn.disabled=false;btn.textContent='Pay '+fmt(t.total)+' with UPI'};
-  btn.disabled=true; btn.textContent='Starting secure payment...';
   const items=cartItems().map(({p,q})=>({name:p.name,qty:q,price:p.price}));
-  let id=(CONFIG.demoMode?'DEMO':'DK')+Date.now().toString(36).toUpperCase();
+  const id=(CONFIG.demoMode?'DEMO':'DK')+Date.now().toString(36).toUpperCase();
   const order={id,name:d.name.trim(),phone:d.phone,email:d.email.trim(),pickup:state.pickup,address:addr,coupon:state.coupon,
     items,sub:t.sub,off:t.off,ship:t.ship,total:t.total,paid:false,utr:''};
   store.set('dk_last',order);
-  const done=utr=>{const o=store.get('dk_last',order);o.id=id;o.paid=true;o.utr=utr||'';store.set('dk_last',o);location.hash='#/order/'+id};
-  try{
-    if(CONFIG.demoMode){ await sleep(900); done('DEMO'); return; }
+  const done=utr=>{const o=store.get('dk_last',order);o.paid=true;o.utr=utr||'';store.set('dk_last',o);location.hash='#/order/'+id};
+  btn.disabled=true; btn.textContent='Opening payment...';
+  if(CONFIG.demoMode){ await sleep(900); done('DEMO'); return; }
+  upiModal({amount:t.total,orderId:id,onPaid:done,onCancel:reset});
+});
+
+
+
+
+  
+// document.addEventListener('submit',async e=>{
+//   if(e.target.id!=='coForm') return; e.preventDefault();
+//   const f=e.target, d=Object.fromEntries(new FormData(f)), err=$('#formErr'), btn=$('#payBtn'); err.textContent='';
+//   if(!d.name.trim()) return err.textContent='Please enter your name.';
+//   if(!/^[6-9]\d{9}$/.test(d.phone)) return err.textContent='Enter a valid 10 digit mobile number.';
+//   if(!/^\S+@\S+\.\S+$/.test(d.email)) return err.textContent='Enter a valid email address.';
+//   if(!state.pickup){ if(!d.address.trim()) return err.textContent='Please enter your delivery address.'; if(!d.city.trim()) return err.textContent='Please enter your city.'; if(!d.state) return err.textContent='Please select your state.'; if(CONFIG.blockedStates.includes(d.state)) return err.textContent='Sorry, we cannot deliver to '+d.state+'. Please choose store pickup or another address.'; if(!/^\d{6}$/.test(d.pin)) return err.textContent='Enter a valid 6 digit pincode.'; }
+//   if(!d.age) return err.textContent='Please confirm that you are 18 or older.';
+//   store.set('dk_user',{name:d.name,phone:d.phone,email:d.email,address:d.address||'',city:d.city||'',state:d.state||'',pin:d.pin||''});
+//   const t=totals(), addr=state.pickup?'':`${d.address}, ${d.city}, ${d.state} ${d.pin}`;
+//   const reset=()=>{btn.disabled=false;btn.textContent='Pay '+fmt(t.total)+' with UPI'};
+//   btn.disabled=true; btn.textContent='Starting secure payment...';
+//   const items=cartItems().map(({p,q})=>({name:p.name,qty:q,price:p.price}));
+//   let id=(CONFIG.demoMode?'DEMO':'DK')+Date.now().toString(36).toUpperCase();
+//   const order={id,name:d.name.trim(),phone:d.phone,email:d.email.trim(),pickup:state.pickup,address:addr,coupon:state.coupon,
+//     items,sub:t.sub,off:t.off,ship:t.ship,total:t.total,paid:false,utr:''};
+//   store.set('dk_last',order);
+//   const done=utr=>{const o=store.get('dk_last',order);o.id=id;o.paid=true;o.utr=utr||'';store.set('dk_last',o);location.hash='#/order/'+id};
+//   try{
+//     if(CONFIG.demoMode){ await sleep(900); done('DEMO'); return; }
 
     // 1. server recomputes the amount from products.js and creates the PayQ order
     const r=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
