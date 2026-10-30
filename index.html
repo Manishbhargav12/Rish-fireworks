@@ -299,6 +299,13 @@ input.f:focus,textarea.f:focus,select.f:focus{border-color:var(--marigold)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;z-index:100;background:var(--cream);color:#2a1000;padding:.7rem 1.3rem;border-radius:99px;font-weight:600;transition:.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
+
+.rp-apps{display:flex;justify-content:center;gap:.7rem}
+.rp-app{width:58px;height:58px;border:1px solid #e3e6ec;border-radius:14px;background:#fff;display:grid;place-items:center}
+.rp-app img{width:34px;height:34px;object-fit:contain}
+.rp-app:hover{background:#f5f7fb}
+.rp-app.off{opacity:.35;pointer-events:none}
+
 /* footer */
 footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);padding-top:3rem}
 .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:2rem}
@@ -339,6 +346,46 @@ footer{margin-top:3rem;background:#08040f;border-top:1px solid var(--line);paddi
 .pq-qr img,.pq-qr canvas{display:block}
 .pq-st{margin:.9rem 0 .4rem;font-size:.95rem}
 .pq-box .btn{width:100%;margin-top:.5rem}
+.rp-ov{position:fixed;inset:0;z-index:300;background:rgba(10,10,12,.78);display:grid;place-items:center;padding:1rem;overflow:auto}
+.rp-card{width:min(400px,100%);max-height:94vh;overflow:auto;background:#fff;color:#1f2430;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.45);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px}
+.rp-head{display:flex;align-items:center;gap:.7rem;background:#3a63c8;color:#fff;padding:.9rem 1rem}
+.rp-logo{width:44px;height:44px;border-radius:10px;background:#fff;color:#3a63c8;display:grid;place-items:center;font-size:1.5rem;font-weight:700;flex:none}
+.rp-brand{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.rp-brand b{font-size:1rem}
+.rp-brand span{align-self:flex-start;font-size:.7rem;background:rgba(255,255,255,.22);padding:1px 8px;border-radius:99px}
+.rp-amt{font-size:1.25rem;font-weight:700}
+.rp-timer{text-align:center;color:#e03131;background:#fff5f5;font-weight:600;padding:.6rem 1rem;border-bottom:1px solid #eceef2}
+.rp-timer.end{font-size:.85rem}
+.rp-body{padding:1.1rem 1rem .8rem;text-align:center}
+.rp-qrwrap{display:inline-block;background:#fff;border-radius:18px;padding:14px;box-shadow:0 2px 14px rgba(0,0,0,.14)}
+.rp-qr{min-width:200px;min-height:200px}
+.rp-qr img,.rp-qr canvas{display:block}
+.rp-hint{color:#7a8190;margin:.9rem 0 .6rem;font-size:.85rem}
+.rp-apps{display:flex;justify-content:center;gap:.7rem}
+.rp-app{width:58px;height:58px;border:1px solid #e3e6ec;border-radius:14px;background:#fff;display:grid;place-items:center}
+.rp-app img{width:34px;height:34px;object-fit:contain}
+.rp-app:hover{background:#f5f7fb}
+.rp-app.off{opacity:.35;pointer-events:none}
+.rp-open{width:100%;box-sizing:border-box;margin-top:.7rem}
+.rp-sec{border-top:1px solid #eceef2;padding:.9rem 1rem}
+.rp-lbl{color:#4a5160;font-weight:600;margin:0 0 .6rem;font-size:.85rem}
+.rp-btns{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.rp-b{display:block;text-align:center;text-decoration:none;font:inherit;font-weight:600;color:#1f2430;background:#fff;border:1px solid #dfe3ea;border-radius:10px;padding:.7rem .5rem;cursor:pointer}
+.rp-b:hover{background:#f5f7fb}
+.rp-rows{margin:0;border-top:1px solid #eceef2;padding:.8rem 1rem;display:grid;gap:.5rem}
+.rp-rows div{display:flex;justify-content:space-between;gap:1rem}
+.rp-rows dt{color:#7a8190}
+.rp-rows dd{margin:0;font-weight:700;text-align:right;word-break:break-all}
+.rp-in{width:100%;box-sizing:border-box;padding:.75rem;border:1px solid #dfe3ea;border-radius:10px;font:inherit;font-size:1.05rem;text-align:center;letter-spacing:.08em;background:#fff;color:#1f2430}
+.rp-in:focus{outline:2px solid #3a63c8;outline-offset:1px}
+.rp-err{color:#e03131;min-height:1.2em;margin:.4rem 0;font-size:.82rem}
+.rp-pay{width:100%;border:0;border-radius:10px;background:#3a63c8;color:#fff;font:inherit;font-weight:700;padding:.8rem;cursor:pointer}
+.rp-pay:hover{background:#2f54b0}
+.rp-x{width:100%;border:0;background:none;color:#7a8190;font:inherit;padding:.6rem;margin-top:.2rem;cursor:pointer}
+.rp-foot{border-top:1px solid #eceef2;margin:0;padding:.8rem 1rem 1rem;text-align:center;color:#7a8190;font-size:.8rem;line-height:1.6}
+.rp-foot a{color:#2b8a3e;font-weight:600}
+.rp-qrwrap.off,.rp-b.off{opacity:.35;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.rp-card{animation:rpin .22s ease-out}@keyframes rpin{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}}
 
 html{scroll-padding-top:120px}
 .skip{position:absolute;left:-999px;top:0;z-index:400;background:var(--marigold);color:#2a1000;padding:.6rem 1rem;border-radius:0 0 10px 0;font-weight:600}.skip:focus{left:0}
@@ -448,20 +495,20 @@ const CONFIG = {
   phone: '+91 98765 43210',            // change to your number
   email: 'hello@dhamakafireworks.in',  // change
   hours: '10:00 AM to 10:00 PM (festive season)',
-  licence: 'Licence No: ____________ (add your explosives licence number)',
+  licence: 'Licence No: 8N0T1T3K1I24627)',
   social: {
     instagram: 'https://instagram.com/',
     facebook:  'https://facebook.com/',
     youtube:   'https://youtube.com/',
-    whatsapp:  'https://wa.me/919672823758'
+    whatsapp:  'https://wa.me/919872823758'
   },
   diwaliDate: '2026-11-08T18:00:00+05:30',   // countdown target
   freeShipAbove: 999, shipping: 60,   // delivery charge for all India, free above this amount
   blockedStates: [],                  // states where you cannot deliver, e.g. ['Delhi','Tamil Nadu']
   /* ---- UPI checkout: money goes straight to this UPI ID ---- */
-  upiId:   'rish.fc@ptyes',
+  upiId:   'BHARATPE.8N0T1T3K1I24627@fbpe',
   upiName: 'Rish-Firekrackers',
-  whatsappNumber: '919672823758',      // country code first, no + or spaces
+  whatsappNumber: '919872823758',      // country code first, no + or spaces
   updated: '2026-10-30',               // shown in the footer, change when you update prices
   demoMode: false                      // true = fake payment for previewing
 };
@@ -879,27 +926,69 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 function upiModal({amount,orderId,onPaid,onCancel}){
   const link='upi://pay?pa='+encodeURIComponent(CONFIG.upiId)+'&pn='+encodeURIComponent(CONFIG.upiName)
-    +'&am='+Number(amount).toFixed(2)+'&cu=INR&tn='+encodeURIComponent('Order '+orderId);
-  const ov=document.createElement('div'); ov.className='pq-ov';
-  ov.innerHTML=`<div class="pq-box"><h3>Pay with UPI</h3><div class="pq-amt">${fmt(amount)}</div>
-    <div class="pq-qr" id="pqQr"></div>
-    <p class="pq-st">Order ${esc(orderId)}</p>
-    <a class="btn" href="${esc(link)}">Open UPI app</a>
-    <p class="pq-st">After paying, enter the 12 digit UPI reference (UTR) from your payment app:</p>
-    <input id="pqUtr" inputmode="numeric" maxlength="12" placeholder="12 digit UTR" style="width:100%;padding:.8rem;border-radius:12px;border:1px solid var(--line);background:transparent;color:inherit;text-align:center;font-size:1.1rem">
-    <p class="note" id="pqErr" style="color:#ff8a8a;min-height:1.2em"></p>
-    <button class="btn" type="button" id="pqOk">I have paid</button>
-    <button class="btn ghost" type="button" id="pqX">Cancel</button>
-    <p class="note">Your order is confirmed after we verify the payment in our bank account.</p></div>`;
+    +'&am='+Number(amount).toFixed(2)+'&cu=INR&tr='+encodeURIComponent(orderId)+'&tn='+encodeURIComponent('Order '+orderId);
+    const q=link.slice('upi://pay'.length);   // the ?pa=...&am=... part
+const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+const andr=pkg=>'intent://pay'+q+'#Intent;scheme=upi;package='+pkg+';end';
+const apps=ios
+  ? {gpay:'gpay://upi/pay'+q, phonepe:'phonepe://pay'+q, paytm:'paytmmp://pay'+q, bhim:'upi://pay'+q}
+  : {gpay:andr('com.google.android.apps.nbu.paisa.user'), phonepe:andr('com.phonepe.app'), paytm:andr('net.one97.paytm'), bhim:andr('in.org.npci.upiapp')};
+  const ov=document.createElement('div'); ov.className='rp-ov';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label','Pay with UPI');
+  ov.innerHTML=`<div class="rp-card">
+    <div class="rp-head"><div class="rp-logo">₹</div><div class="rp-brand"><b>Rish Fireworks</b><span>Pay by UPI</span></div><div class="rp-amt">${fmt(amount)}</div></div>
+    <div class="rp-timer" id="rpTimer">Complete payment in 05:00</div>
+    <div class="rp-body">
+      <div class="rp-qrwrap" id="rpQrWrap"><div class="rp-qr" id="rpQr"></div></div>
+      <p class="rp-hint">Scan QR code with any UPI app</p>
+      <div class="rp-apps">
+  <a class="rp-app" href="${esc(apps.gpay)}" aria-label="Google Pay"><img src="images/upi/gpay.png" alt="Google Pay"></a>
+  <a class="rp-app" href="${esc(apps.phonepe)}" aria-label="PhonePe"><img src="images/upi/phonepe.png" alt="PhonePe"></a>
+  <a class="rp-app" href="${esc(apps.paytm)}" aria-label="Paytm"><img src="images/upi/paytm.png" alt="Paytm"></a>
+  <a class="rp-app" href="${esc(apps.bhim)}" aria-label="BHIM"><img src="images/upi/bhim.png" alt="BHIM"></a>
+</div>
+    </div>
+    <div class="rp-sec"><p class="rp-lbl">Pay with other methods</p>
+      <div class="rp-btns"><a class="rp-b" id="rpOpen" href="${esc(link)}">Open UPI app</a><button type="button" class="rp-b" id="rpCopy">Copy UPI ID</button></div></div>
+    <dl class="rp-rows">
+      <div><dt>Order ID:</dt><dd>${esc(orderId)}</dd></div>
+      <div><dt>Order Amount:</dt><dd>${fmt(amount)}</dd></div>
+      <div><dt>UPI ID:</dt><dd>${esc(CONFIG.upiId)}</dd></div>
+    </dl>
+      <p class="rp-err" id="rpErr"></p>
+      <button type="button" class="rp-pay" id="rpOk">I have paid</button>
+      <button type="button" class="rp-x" id="rpX">Cancel</button></div>
+    <p class="rp-foot">All UPI apps accepted<br>Need help? <a href="https://wa.me/${CONFIG.whatsappNumber}" target="_blank" rel="noopener">WhatsApp us</a></p>
+  </div>`;
   document.body.appendChild(ov);
-  if(window.QRCode) new QRCode(ov.querySelector('#pqQr'),{text:link,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
-  else ov.querySelector('#pqQr').textContent='QR failed to load, use the button below.';
-  ov.querySelector('#pqOk').onclick=()=>{
-    const u=ov.querySelector('#pqUtr').value.trim();
-    if(!/^\d{12}$/.test(u)) return ov.querySelector('#pqErr').textContent='Enter the 12 digit UTR number.';
-    ov.remove(); onPaid(u);
+  if(window.QRCode) new QRCode(ov.querySelector('#rpQr'),{text:link,width:200,height:200,correctLevel:QRCode.CorrectLevel.M});
+  else ov.querySelector('#rpQr').textContent='QR failed to load, use the button below.';
+
+  let left=300, tm; const tEl=ov.querySelector('#rpTimer');
+  const draw=()=>{tEl.textContent='Complete payment in '+String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0')};
+  const close=()=>{clearInterval(tm); ov.remove()};
+  draw();
+  tm=setInterval(()=>{
+    left--;
+    if(left>0) return draw();
+    clearInterval(tm);
+    tEl.textContent='Time is up. Already paid? Enter your UTR below. If not, cancel and start again.'; tEl.classList.add('end');
+    ov.querySelector('#rpQrWrap').classList.add('off');
+    const o=ov.querySelector('#rpOpen'); o.classList.add('off'); o.removeAttribute('href');
+  },1000);
+
+  ov.querySelector('#rpCopy').onclick=async e=>{
+    const b=e.currentTarget; let ok=true;
+    try{await navigator.clipboard.writeText(CONFIG.upiId)}
+    catch(_){const t=document.createElement('textarea');t.value=CONFIG.upiId;document.body.appendChild(t);t.select();try{ok=document.execCommand('copy')}catch(_){ok=false}t.remove()}
+    b.textContent=ok?'Copied':'Copy failed'; setTimeout(()=>{b.textContent='Copy UPI ID'},1600);
   };
-  ov.querySelector('#pqX').onclick=()=>confirmBox('Cancel this payment?','Yes, cancel').then(ok=>{if(ok){ov.remove();onCancel&&onCancel()}});
+  ov.querySelector('#rpOk').onclick=()=>{
+    const u=ov.querySelector('#rpUtr').value.trim();
+    if(!/^\d{12}$/.test(u)) return ov.querySelector('#rpErr').textContent='Enter the 12 digit UTR number.';
+    close(); onPaid(u);
+  };
+  ov.querySelector('#rpX').onclick=()=>confirmBox('Cancel this payment?','Yes, cancel').then(ok=>{if(ok){close();onCancel&&onCancel()}});
 }
 
 document.addEventListener('submit',async e=>{
