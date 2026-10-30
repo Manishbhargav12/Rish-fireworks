@@ -851,7 +851,7 @@ function upiModal({amount,orderId,onPaid,onCancel}){
   const ov=document.createElement('div'); ov.className='pq-ov';
   ov.innerHTML=`<div class="pq-box"><h3>Pay with UPI</h3><div class="pq-amt">${fmt(amount)}</div>
     <div class="pq-qr" id="pqQr"></div>
-    <p class="pq-st">Pay to <b>${esc(CONFIG.upiId)}</b><br>Order ${esc(orderId)}</p>
+    <p class="pq-st">Order ${esc(orderId)}</p>
     <a class="btn" href="${esc(link)}">Open UPI app</a>
     <p class="pq-st">After paying, enter the 12 digit UPI reference (UTR) from your payment app:</p>
     <input id="pqUtr" inputmode="numeric" maxlength="12" placeholder="12 digit UTR" style="width:100%;padding:.8rem;border-radius:12px;border:1px solid var(--line);background:transparent;color:inherit;text-align:center;font-size:1.1rem">
