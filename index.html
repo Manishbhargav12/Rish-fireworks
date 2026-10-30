@@ -413,10 +413,10 @@ const CONFIG = {
   blockedStates: [],                  // states where you cannot deliver, e.g. ['Delhi','Tamil Nadu']
   /* ---- PayQ UPI checkout ---- */
   /* >>> CHANGE #1: set your WhatsApp number (country code first, no + or spaces). Orders (items, address) are sent here after payment. <<< */
-  whatsappNumber: '919876543210',
-  demoMode: false 
   upiId:   '9672823758@okaxis',          // the UPI ID that receives money
   upiName: 'Rish-Firekrackers',      // name shown in the customer's UPI app
+  whatsappNumber: '919876543210',
+  demoMode: false ,
 };
 const COUPONS = { DIWALI10: 10 };   // code -> % off (the server re-checks it in payq-core.js)
 
